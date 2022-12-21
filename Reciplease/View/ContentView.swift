@@ -8,14 +8,26 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var selection: Tab = .search
+    
+    enum Tab {
+        case search
+        case favorite
+    }
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        TabView(selection: $selection) {
+            SearchView()
+                .tabItem {
+                    Text("Search")
+                }
+            NavigationView {
+                RecipeList(recipes: ModelData().recipes)
+            }
+            .tabItem {
+                Text("Favorite")
+            }
         }
-        .padding()
     }
 }
 
