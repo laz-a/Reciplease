@@ -9,6 +9,13 @@ import Foundation
 import Combine
 
 class RecipeViewModel: ObservableObject {
+    enum State {
+        case idle
+        case loading
+        case failed
+        case loaded
+    }
+    
     var ingredients: [String] = [] {
         didSet {
             ingredientsList = ingredients.map { "- \($0)\n" }.joined()
@@ -19,10 +26,18 @@ class RecipeViewModel: ObservableObject {
     
     @Published var recipes: [Recipe] = []
     
+    @Published private(set) var state = State.idle {
+        didSet {
+            loaded = state == .loaded
+        }
+    }
+    
+    @Published var loaded: Bool = false
+    
     func addIngredients(_ ingredients: String) {
         let add = ingredients
             .components(separatedBy: ",")
-            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .map { $0.trimmingCharacters(in: .whitespaces).capitalized }
             .filter { !self.ingredients.contains($0) && !$0.isEmpty }
         
         self.ingredients += add
@@ -31,20 +46,24 @@ class RecipeViewModel: ObservableObject {
     
     func clearIngredients() {
         ingredients = []
-        ingredientsList = "l"
-        print(ingredients)
-        print(ingredientsList)
     }
     
     func searchRecipes() {
+        print("searchRecipes")
+        state = .loading
         RecipeService.shared.getRecipes(for: ingredients) { response in
-            print(response)
             switch response {
             case .success(let recipes):
                 self.recipes = recipes
+                self.state = .loaded
             case .failure(let error):
                 print(error)
+                self.state = .failed
             }
         }
+    }
+    
+    func setState(_ state: State) {
+        self.state = state
     }
 }
