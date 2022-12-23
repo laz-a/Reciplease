@@ -10,81 +10,81 @@ import SwiftUI
 struct SearchView: View {
     @State private var searchText: String = ""
     
-    private var recipeModel = RecipeViewModel()
+    @ObservedObject private var recipeModel = RecipeViewModel()
+    
+    private func addIngredients() {
+        recipeModel.addIngredients(searchText)
+        searchText = ""
+    }
     
     var body: some View {
-        NavigationView {
-            VStack {
-                Spacer()
+        ZStack {
+            NavigationStack {
                 VStack {
-                    Text("What's in your fridge ?")
-                    HStack {
-                        VStack {
-                            TextField("Lemon, Cheese, Sausages...", text: $searchText)
-                            Divider()
-                        }
-                        Button {
-                            print("la")
-                            print(searchText)
-                            recipeModel.addIngredients(searchText)
-                            searchText = ""
-                        } label: {
-                            Text("Add")
-                                .padding([.top, .bottom], 10)
-                                .frame(width: 60)
-                                .foregroundColor(.white)
-                                .background(Color.greenButton)
-                                .cornerRadius(5)
-                        }
-                    }
-                }
-                .padding()
-                .background(.white)
-
-                VStack(alignment: .leading, spacing: 20) {
-                    HStack {
-                        Text("Your ingredients :")
-                        Spacer()
-                        Button {
-                            print("la 2")
-                            recipeModel.clearIngredients()
-                        } label: {
-                            Text("Clear")
-                                .padding([.top, .bottom], 10)
-                                .frame(width: 60)
-                                .foregroundColor(.white)
-                                .background(Color.grayButton)
-                                .cornerRadius(5)
-                        }
-                    }
-                    Text(recipeModel.ingredientsList)
-
                     Spacer()
-
-                    NavigationLink(destination: RecipeList(recipes: recipeModel.recipes)) {
+                    VStack {
+                        Text("What's in your fridge ?")
+                        HStack {
+                            VStack {
+                                TextField("Lemon, Cheese, Sausages...", text: $searchText)
+                                    .onSubmit {
+                                        addIngredients()
+                                    }
+                                    .submitLabel(.done)
+                                Divider()
+                            }
+                            Button("Add") {
+                                addIngredients()
+                            }
+                            .buttonStyle(GreenButton())
+                        }
+                    }
+                    .padding()
+                    .foregroundColor(.darkBackground)
+                    .background(.white)
+                    
+                    VStack(alignment: .leading, spacing: 20) {
+                        HStack {
+                            Text("Your ingredients :")
+                            Spacer()
+                            Button("Clear") {
+                                recipeModel.clearIngredients()
+                            }
+                            .buttonStyle(GrayButton())
+                        }
+                        
+                        Text(recipeModel.ingredientsList)
+                        
+                        Spacer()
+                        
+                        if recipeModel.state == .loading {
+                            HStack(alignment: .center) {
+                                ProgressView()
+                                    .frame(maxWidth: .infinity)
+                                    .foregroundColor(Color.darkBackground)
+                                    .cornerRadius(10)
+                                    .tint(.white)
+                            }
+                            .scaleEffect(2)
+                            .padding()
+                        }
+                        
                         Button {
-                            print("Save")
                             recipeModel.searchRecipes()
                         } label: {
                             Text("Search for recipes")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .foregroundColor(.white)
-                                .background(Color.greenButton)
-                                .cornerRadius(5)
                         }
-                        .disabled(true)
+                        .buttonStyle(GreenFullButton())
+                        .disabled(recipeModel.state == .loading)
                     }
+                    .padding()
+                    .navigationTitle("Reciplease")
+                    .foregroundColor(.white)
+                }.navigationDestination(isPresented: $recipeModel.loaded) {
+                    RecipeList(recipes: recipeModel.recipes)
                 }
-                .padding()
-                .navigationTitle("Reciplease")
-                
-//                .toolbarBackground(.pink, for: .navigationBar)
-//                .toolbarBackground(.visible, for: .navigationBar)
-                
-//                .background(.orange)
+                .background(Color.darkBackground)
             }
-            .background(Color.darkBackground)
         }
     }
 }
