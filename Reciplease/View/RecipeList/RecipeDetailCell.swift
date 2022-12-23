@@ -14,22 +14,31 @@ struct RecipeDetailCell: View {
         VStack {
             HStack {
                 Text("\(recipe.totalTime)k")
-                    .frame(width: 25)
+//                    .frame(width: 25)
                     .font(.caption2)
                 Spacer()
                 Image(systemName: "hand.thumbsup.fill")
+                    .scaleEffect(0.8)
             }
             Spacer()
             HStack {
                 Text("\(recipe.totalTime)m")
-                    .frame(width: 25)
+//                    .frame(width: 25)
                     .font(.caption2)
                     
                 Spacer()
                 Image(systemName: "clock")
+                    .scaleEffect(0.8)
             }
         }
-        .background(.red)
+        .padding(4)
+        .background(Color.darkBackground)
+        .foregroundColor(.white)
+        .cornerRadius(3)
+        .overlay {
+            RoundedRectangle(cornerRadius: 3)
+                .stroke(.white, lineWidth: 1)
+        }
     }
 }
 

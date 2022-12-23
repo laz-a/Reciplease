@@ -9,40 +9,54 @@ import SwiftUI
 
 struct RecipeRow: View {
     var recipe: Recipe
+    
+    let rowHeight = 120.0
+    
+    var gradient: LinearGradient {
+        .linearGradient(
+            Gradient(colors: [.black.opacity(0.9), .black.opacity(0)]),
+            startPoint: .bottom,
+            endPoint: .top)
+    }
+    
     var body: some View {
-        ZStack {
-            AsyncImage(url: URL(string: recipe.image)) { phase in
-                switch phase {
-                case .empty:
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                case .success(let image):
-                    image
-//                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                case .failure:
-                    Text("Failed fetching image. Make sure to check your data connection and try again.")
-                        .foregroundColor(.red)
-                @unknown default:
-                    Text("Unknown error. Please try again.")
-                        .foregroundColor(.red)
-                }
+        VStack(alignment: .leading) {
+            HStack {
+                Spacer()
+                RecipeDetailCell(recipe: recipe)
+                    .frame(width: 60)
             }
-            
-            VStack(alignment: .leading) {
-                HStack {
-                    Spacer()
-                    RecipeDetailCell(recipe: recipe)
-                        .frame(width: 50, height: 50)
+            Text(recipe.label)
+            Text(recipe.ingredients.map { $0.food.capitalized }.joined(separator: ", "))
+                .lineLimit(1)
+        }
+        .padding()
+        .background {
+
+            ZStack {
+                AsyncImage(url: URL(string: recipe.image)) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(maxWidth: .infinity, maxHeight: rowHeight)
+                            .clipped()
+                    case .failure:
+                        Text("Failed fetching image. Make sure to check your data connection and try again.")
+                            .foregroundColor(.red)
+                    @unknown default:
+                        Text("Unknown error. Please try again.")
+                            .foregroundColor(.red)
+                    }
                 }
-                Text(recipe.label)
-                    .foregroundColor(.yellow)
-                Text(recipe.ingredients.map { $0.food.capitalized }.joined(separator: ", "))
-                    .lineLimit(1)
-                    .foregroundColor(.yellow)
+                gradient
             }
         }
-
+        .frame(height: rowHeight)
     }
 }
 

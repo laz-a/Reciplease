@@ -11,30 +11,29 @@ struct RecipeList: View {
     var recipes: [Recipe]
     @State private var path = NavigationPath()
     var body: some View {
-            List {
-                ForEach(recipes, id: \.uri) { recipe in
-                    ZStack {
-                        NavigationLink {
-                            RecipeDetail(recipe: recipe)
-                        }
-                        label: {
-                            EmptyView()
-                        }
-                        .opacity(0.0)
-                        .buttonStyle(PlainButtonStyle())
-                        
-                        RecipeRow(recipe: recipe)
-                            .frame(height: 90)
+        List {
+            ForEach(recipes, id: \.uri) { recipe in
+                ZStack {
+                    NavigationLink {
+                        RecipeDetail(recipe: recipe)
                     }
-                    .listRowInsets(EdgeInsets())
-                    .listRowSeparator(.hidden)
-                    .tag(recipe)
+                    label: {
+                        EmptyView()
+                    }
+                    .opacity(0.0)
+                    .buttonStyle(PlainButtonStyle())
+                    
+                    RecipeRow(recipe: recipe)
                 }
+                .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden)
+                .tag(recipe)
             }
-            .listStyle(.plain)
-            .navigationTitle("Reciplease")
-            .toolbarBackground(.pink, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
+            .background(Color.darkBackground)
+        }
+        .listStyle(.plain)
+        .background(Color.darkBackground)
+        .navigationTitle("Reciplease")
     }
 }
 
