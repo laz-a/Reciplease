@@ -66,14 +66,17 @@ struct RecipeDetail: View {
                 .navigationBarTitleDisplayMode(.inline)
             }
             
-            Button {
-                print("Save")
+            NavigationLink {
+                RecipeDirections(recipe: recipe)
             } label: {
                 Text("Get directions")
+                    .padding([.top, .bottom], 10)
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+                    .background(Color.greenButton)
+                    .cornerRadius(5)
             }
-            .buttonStyle(GreenFullButton())
-            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-            .disabled(true)
+            .padding()
         }
         .background(Color.darkBackground)
         .toolbar {

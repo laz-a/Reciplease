@@ -13,12 +13,15 @@ struct NavigationAppearanceModifier: ViewModifier {
         navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor(foregroundColor)]
         navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor(foregroundColor)]
         navBarAppearance.backgroundColor = UIColor(backgroundColor)
+        
         if hideSeparator {
             navBarAppearance.shadowColor = .clear
         }
+        
         UINavigationBar.appearance().standardAppearance = navBarAppearance
         UINavigationBar.appearance().compactAppearance = navBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
+        
         if let tintColor = tintColor {
             UINavigationBar.appearance().tintColor = UIColor(tintColor)
         }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RecipeList: View {
     var recipes: [Recipe]
-    @State private var path = NavigationPath()
+    
     var body: some View {
         List {
             ForEach(recipes, id: \.uri) { recipe in

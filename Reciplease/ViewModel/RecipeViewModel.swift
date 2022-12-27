@@ -37,11 +37,15 @@ class RecipeViewModel: ObservableObject {
     func addIngredients(_ ingredients: String) {
         let add = ingredients
             .components(separatedBy: ",")
-            .map { $0.trimmingCharacters(in: .whitespaces).capitalized }
-            .filter { !self.ingredients.contains($0) && !$0.isEmpty }
+            .reduce([String](), { partialResult, ing in
+                let ingredient: String = ing.trimmingCharacters(in: .whitespaces).capitalized
+                if !partialResult.contains(ingredient) && !self.ingredients.contains(ingredient) && !ingredient.isEmpty {
+                    return partialResult + [ingredient]
+                }
+                return partialResult
+            })
         
         self.ingredients += add
-        print(self.ingredients)
     }
     
     func clearIngredients() {

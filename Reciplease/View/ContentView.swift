@@ -23,12 +23,15 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selection) {
             Group {
-                SearchView()
-                    .tabItem {
-                        Text("Search")
-                            .font(Font.custom("Cera-Regular", size: 36))
-                    }
-                    .tag(Tab.search)
+                NavigationView {
+                    SearchView()
+                }
+                .tabItem {
+                    Text("Search")
+                        .font(Font.custom("Cera-Regular", size: 36))
+                }
+                .tag(Tab.search)
+                
                 NavigationView {
                     RecipeList(recipes: ModelData().recipes)
                 }
@@ -37,8 +40,9 @@ struct ContentView: View {
                 }
                 .tag(Tab.favorite)
             }
-            .toolbar(.visible, for: .tabBar)
-            .toolbarBackground(Color.darkBackground, for: .tabBar)
+            .tabbarAppearance(backgroundColor: .darkBackground)
+//            .toolbar(.visible, for: .tabBar)
+//            .toolbarBackground(Color.darkBackground, for: .tabBar)
         }
         .navigationAppearance(backgroundColor: .darkBackground, foregroundColor: .white)
         .tint(.white)

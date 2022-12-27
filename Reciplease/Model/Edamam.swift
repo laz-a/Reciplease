@@ -12,6 +12,7 @@ struct Edamam: Decodable {
     let to: Int
     let count: Int
     
+    
     let recipes: [Recipe]
     
     // Root coding keys
@@ -48,6 +49,7 @@ struct Recipe: Codable, Hashable {
         ingredients.map { "- \($0.text) \n" }.joined()
     }
     let totalTime: Int
+//    var isFavorite: Bool = false
     
     static func == (lhs: Recipe, rhs: Recipe) -> Bool {
         return lhs.uri == rhs.uri
@@ -55,6 +57,10 @@ struct Recipe: Codable, Hashable {
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(uri)
+    }
+    
+    func toCoreData() {
+        
     }
 }
 
