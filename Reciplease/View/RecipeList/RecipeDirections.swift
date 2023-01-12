@@ -8,16 +8,15 @@
 import SwiftUI
 
 struct RecipeDirections: View {
-    let recipe: Recipe
+    let url: URL
     
     var body: some View {
-        WebView(url: recipe.url)
-//            .toolbar(.hidden, for: .tabBar)
+        WebView(url: url)
     }
 }
 
 struct RecipeDirections_Previews: PreviewProvider {
     static var previews: some View {
-        RecipeDirections(recipe: ModelData().recipes[0])
+        RecipeDirections(url: ModelData().recipes[0].url)
     }
 }

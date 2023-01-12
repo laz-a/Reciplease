@@ -19,17 +19,28 @@ class RecipeService {
                             "field": ["uri", "label", "image", "images", "source", "url", "healthLabels", "cautions", "ingredients", "calories", "glycemicIndex", "totalWeight", "totalTime", "cuisineType", "mealType", "dishType", "tags"]
                             ]
 
-    func getRecipes(for ingredients: [String], completionHandler: @escaping (Result<[Recipe], AFError>) -> Void) {
+    func getRecipes(for ingredients: [String], completionHandler: @escaping (Result<Edamam, AFError>) -> Void) {
         parameters["q"] = ingredients.joined(separator: ",")
-        
         AF.request(RecipeService.url, parameters: parameters, encoding: encoding).responseDecodable(of: Edamam.self) { response in
-            print(response)
             switch response.result {
             case .success(let edaman):
-                completionHandler(.success(edaman.recipes))
+                completionHandler(.success(edaman))
             case .failure(let error):
                 completionHandler(.failure(error))
             }
         }
     }
+    
+    
+    func getRecipes(url: String, completionHandler: @escaping (Result<Edamam, AFError>) -> Void) {
+        AF.request(url).responseDecodable(of: Edamam.self) { response in
+            switch response.result {
+            case .success(let edaman):
+                completionHandler(.success(edaman))
+            case .failure(let error):
+                completionHandler(.failure(error))
+            }
+        }
+    }
+    
 }

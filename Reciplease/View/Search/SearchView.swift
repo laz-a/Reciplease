@@ -9,12 +9,14 @@ import SwiftUI
 
 struct SearchView: View {
 @State private var isActive = false
-    @State private var searchText: String = ""
+    @State private var searchText: String = "Chicken"
+    @State private var presentAlertError = false
 
-    @ObservedObject private var recipeModel = RecipeViewModel()
+    @EnvironmentObject var recipeViewModel: RecipeViewModel
+//    @ObservedObject private var recipeModel = RecipeViewModel()
 
     private func addIngredients() {
-        recipeModel.addIngredients(searchText)
+        recipeViewModel.addIngredients(searchText)
         searchText = ""
     }
 
@@ -48,20 +50,20 @@ struct SearchView: View {
                         Text("Your ingredients :")
                         Spacer()
                         Button("Clear") {
-                            recipeModel.clearIngredients()
+                            recipeViewModel.clearIngredients()
                         }
                         .buttonStyle(GrayButton())
                     }
 
                     VStack(alignment: .leading, spacing: 5) {
                         ScrollView {
-                            Text(recipeModel.ingredientsList)
+                            Text(recipeViewModel.ingredientsList)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                         
                         Spacer()
                         
-                        if recipeModel.state == .loading {
+                        if recipeViewModel.state == .loading {
                             HStack(alignment: .center) {
                                 ProgressView()
                                     .frame(maxWidth: .infinity)
@@ -73,16 +75,25 @@ struct SearchView: View {
                             .padding()
                         }
                         
-                        NavigationLink(isActive: .constant(recipeModel.loaded)) {
-                            RecipeList(recipes: recipeModel.recipes)
+                        NavigationLink(isActive: .constant(recipeViewModel.loaded)) {
+                            RecipeList()
                         } label: {
                             Button {
-                                recipeModel.searchRecipes()
+                                if !recipeViewModel.ingredients.isEmpty {
+                                    recipeViewModel.searchRecipes()
+                                } else {
+                                    presentAlertError = true
+                                }
                             } label: {
                                 Text("Search for recipes")
                             }
+                            .alert(isPresented: $presentAlertError) {
+                                Alert(
+                                    title: Text("Ingredient error"),
+                                    message: Text("Add at least one ingredient"))
+                            }
                             .buttonStyle(GreenFullButton())
-                            .disabled(recipeModel.state == .loading)
+                            .disabled(recipeViewModel.state == .loading)
                         }
                     }
                 }
@@ -98,5 +109,6 @@ struct SearchView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         SearchView()
+            .environmentObject(RecipeViewModel())
     }
 }

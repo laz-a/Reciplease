@@ -8,17 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var recipeViewModel: RecipeViewModel
     @State private var selection: Tab = .search
     
     enum Tab {
         case search
         case favorite
     }
-    
-//    init() {
-//        UITabBarItem.appearance().titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -40)
-//     UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont.init(name: "system", size: 55)! ], for: .normal)
-//    }
     
     var body: some View {
         TabView(selection: $selection) {
@@ -33,7 +29,11 @@ struct ContentView: View {
                 .tag(Tab.search)
                 
                 NavigationView {
-                    RecipeList(recipes: ModelData().recipes)
+                    FavoriteList()
+                        .onAppear {
+                            print("FavoriteList ~~~~~~ onAppear")
+                            recipeViewModel.getFavorites()
+                        }
                 }
                 .tabItem {
                     Text("Favorite").font(.system(size: 36))
@@ -41,8 +41,6 @@ struct ContentView: View {
                 .tag(Tab.favorite)
             }
             .tabbarAppearance(backgroundColor: .darkBackground)
-//            .toolbar(.visible, for: .tabBar)
-//            .toolbarBackground(Color.darkBackground, for: .tabBar)
         }
         .navigationAppearance(backgroundColor: .darkBackground, foregroundColor: .white)
         .tint(.white)
@@ -53,5 +51,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(RecipeViewModel())
     }
 }

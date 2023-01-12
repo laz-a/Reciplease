@@ -12,7 +12,6 @@ final class ModelData: ObservableObject {
     var recipes: [Recipe] = load("recipeData.json")
 }
 
-
 func load(_ filename: String) -> [Recipe] {
     let data: Data
 

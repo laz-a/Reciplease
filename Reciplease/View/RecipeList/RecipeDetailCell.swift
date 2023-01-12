@@ -8,24 +8,13 @@
 import SwiftUI
 
 struct RecipeDetailCell: View {
-    var recipe: Recipe
+    var duration: Int16
     
     var body: some View {
         VStack {
             HStack {
-                Text("\(recipe.totalTime)k")
-//                    .frame(width: 25)
+                Text(duration.toTime)
                     .font(.caption2)
-                Spacer()
-                Image(systemName: "hand.thumbsup.fill")
-                    .scaleEffect(0.8)
-            }
-            Spacer()
-            HStack {
-                Text("\(recipe.totalTime)m")
-//                    .frame(width: 25)
-                    .font(.caption2)
-                    
                 Spacer()
                 Image(systemName: "clock")
                     .scaleEffect(0.8)
@@ -44,7 +33,7 @@ struct RecipeDetailCell: View {
 
 struct RecipeDetailCell_Previews: PreviewProvider {
     static var previews: some View {
-        RecipeDetailCell(recipe: ModelData().recipes[0])
+        RecipeDetailCell(duration: ModelData().recipes[0].totalTime)
             .previewLayout(.fixed(width: 50, height: 50))
     }
 }

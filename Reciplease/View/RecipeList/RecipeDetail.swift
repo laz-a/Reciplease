@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct RecipeDetail: View {
-    var recipe: Recipe
+    @EnvironmentObject var recipeModel: RecipeViewModel
+    @State var recipe: Recipe
+    @State private var recipeImage: Image?
     
     var gradient: LinearGradient {
         .linearGradient(
@@ -22,7 +24,7 @@ struct RecipeDetail: View {
             ScrollView {
                 VStack(alignment: .leading) {
                     ZStack {
-                        AsyncImage(url: URL(string: recipe.image)) { phase in
+                        AsyncImage(url: recipe.image) { phase in
                             switch phase {
                             case .empty:
                                 ProgressView()
@@ -31,6 +33,10 @@ struct RecipeDetail: View {
                                 image
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
+                                    .onAppear {
+                                        print("onAppear :: recipeImage")
+                                        recipeImage = image
+                                    }
                             case .failure:
                                 Text("Failed fetching image. Make sure to check your data connection and try again.")
                                     .foregroundColor(.red)
@@ -42,13 +48,13 @@ struct RecipeDetail: View {
                         VStack {
                             HStack {
                                 Spacer()
-                                RecipeDetailCell(recipe: recipe)
+                                RecipeDetailCell(duration: recipe.totalTime)
                                     .frame(width: 60, height: 60)
                             }
                             .padding()
                             
                             Spacer()
-                            Text(recipe.label)
+                            Text(recipe.name)
                                 .font(.title)
                         }
                         gradient
@@ -57,17 +63,17 @@ struct RecipeDetail: View {
                         Text("Ingredients")
                             .font(.title2)
                         
-                        Text(recipe.ingredientsList)
+                        Text(recipe.ingredientsLongList)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                 }
-                .navigationTitle(recipe.label)
+                .navigationTitle(recipe.name)
                 .navigationBarTitleDisplayMode(.inline)
             }
             
             NavigationLink {
-                RecipeDirections(recipe: recipe)
+                WebView(url: recipe.url)
             } label: {
                 Text("Get directions")
                     .padding([.top, .bottom], 10)
@@ -81,7 +87,20 @@ struct RecipeDetail: View {
         .background(Color.darkBackground)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                FavoriteButton(isSet: .constant(true))
+                Button {
+                    if !recipe.isFavorite {
+                        recipeModel.addFavorite(recipe, image: recipeImage?.imageData())
+                    }
+                } label: {
+                    Label("Toggle favorite", systemImage: recipe.isFavorite ? "star.fill" : "star")
+                        .labelStyle(.iconOnly)
+                        .foregroundColor(Color.greenButton)
+                }
+                .onAppear {
+                    print("~~~~~~~~~~isFavorite~~~~~~~~~~")
+                    print(recipe.isFavorite)
+                    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                }
             }
         }
     }
@@ -90,5 +109,32 @@ struct RecipeDetail: View {
 struct RecipeDetail_Previews: PreviewProvider {
     static var previews: some View {
         RecipeDetail(recipe: ModelData().recipes[0])
+            .environmentObject(RecipeViewModel())
+    }
+}
+
+
+
+
+
+extension View {
+    func imageData() -> Data? {
+        let controller = UIHostingController(rootView: self.ignoresSafeArea())
+        let view = controller.view
+
+        let targetSize = controller.view.intrinsicContentSize
+        view?.bounds = CGRect(origin: .zero, size: targetSize)
+        view?.backgroundColor = .yellow
+
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+
+        let uiImage = renderer.image { _ in
+            view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
+        }
+        
+        
+        let imageData = uiImage.jpegData(compressionQuality: 0.8)
+        
+        return imageData
     }
 }

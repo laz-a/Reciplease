@@ -8,37 +8,60 @@
 import SwiftUI
 
 struct RecipeList: View {
-    var recipes: [Recipe]
+    @EnvironmentObject var recipeViewModel: RecipeViewModel
     
     var body: some View {
-        List {
-            ForEach(recipes, id: \.uri) { recipe in
-                ZStack {
-                    NavigationLink {
-                        RecipeDetail(recipe: recipe)
+        Group {
+            if recipeViewModel.recipes.isEmpty {
+                Text("No result")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.darkBackground)
+                    .foregroundColor(.grayButton)
+            } else {
+                List {
+                    ForEach(recipeViewModel.recipes) { recipe in
+                        ZStack {
+                            NavigationLink {
+                                RecipeDetail(recipe: recipe)
+                            }
+                        label: {
+                            EmptyView()
+                        }
+                        .opacity(0.0)
+                        .buttonStyle(PlainButtonStyle())
+                            
+                            RecipeRow(name: recipe.name, duration: recipe.totalTime, ingredient: recipe.ingredientsShortList)
+                                .background {
+                                    BackgroundImage(src: recipe.image)
+                                }
+                        }
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.darkBackground)
+                        .tag(recipe)
                     }
-                    label: {
-                        EmptyView()
-                    }
-                    .opacity(0.0)
-                    .buttonStyle(PlainButtonStyle())
                     
-                    RecipeRow(recipe: recipe)
+                    if recipeViewModel.hasNext {
+                        ActivityIndicator(isAnimating: .constant(true))
+                            .frame(maxWidth: .infinity)
+                            .listRowBackground(Color.darkBackground)
+                            .onAppear {
+                                print("ActivityIndicator")
+                                recipeViewModel.loadNextRecipes()
+                            }
+                    }
                 }
-                .listRowInsets(EdgeInsets())
-                .listRowSeparator(.hidden)
-                .tag(recipe)
+                .listStyle(.plain)
+                .environment(\.defaultMinListRowHeight, 10)
+                .background(Color.darkBackground)
             }
-            .background(Color.darkBackground)
-        }
-        .listStyle(.plain)
-        .background(Color.darkBackground)
-        .navigationTitle("Reciplease")
+        }.navigationTitle("Reciplease")
     }
 }
 
 struct ListView_Previews: PreviewProvider {
     static var previews: some View {
-        RecipeList(recipes: ModelData().recipes)
+        RecipeList()
+            .environmentObject(RecipeViewModel())
     }
 }
