@@ -10,6 +10,7 @@ import SwiftUI
 struct FavoriteDetail: View {
     @EnvironmentObject var recipeModel: RecipeViewModel
     @Environment(\.dismiss) var dismiss
+    
     @State private var showingSheet = false
     
     var favorite: Favorite
@@ -20,6 +21,9 @@ struct FavoriteDetail: View {
                 VStack(alignment: .leading) {
                     ZStack {
                         BackgroundImage(height: .infinity, data: favorite.image)
+                            .accessibilityHidden(false)
+                            .accessibilityLabel(Text("Recipe illustration"))
+                            .accessibilityValue(Text(favorite.name))
                         Constant.gradient
                         VStack {
                             HStack {
@@ -31,6 +35,7 @@ struct FavoriteDetail: View {
                             
                             Spacer()
                             Text(favorite.name)
+                                .multilineTextAlignment(.center)
                                 .font(.title)
                         }
                     }
@@ -39,6 +44,8 @@ struct FavoriteDetail: View {
                             .font(.title2)
                         
                         Text(favorite.ingredientsLongList)
+                            .accessibilityLabel(Text("Ingredients"))
+                            .accessibilityValue(favorite.ingredientsLongList)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))

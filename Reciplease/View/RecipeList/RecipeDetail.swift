@@ -10,7 +10,7 @@ import SwiftUI
 struct RecipeDetail: View {
     @EnvironmentObject var recipeViewModel: RecipeViewModel
     
-    @State var recipe: Recipe
+    var recipe: Recipe
     @State private var recipeImage: Image?
     @State private var showingSheet = false
     @State private var isFavorite: Bool = false
@@ -43,6 +43,9 @@ struct RecipeDetail: View {
                                     .aspectRatio(contentMode: .fill)
                             }
                         }
+                        .accessibilityHidden(false)
+                        .accessibilityLabel(Text("Recipe illustration"))
+                        .accessibilityValue(Text(recipe.name))
                         Constant.gradient
                         VStack {
                             HStack {
@@ -54,6 +57,7 @@ struct RecipeDetail: View {
                             
                             Spacer()
                             Text(recipe.name)
+                                .multilineTextAlignment(.center)
                                 .font(.title)
                         }.padding(.bottom)
                     }
@@ -62,6 +66,8 @@ struct RecipeDetail: View {
                             .font(.title2)
                         
                         Text(recipe.ingredientsLongList)
+                            .accessibilityLabel(Text("Ingredients"))
+                            .accessibilityValue(recipe.ingredientsLongList)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))

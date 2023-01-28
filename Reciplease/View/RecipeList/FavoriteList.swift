@@ -31,6 +31,9 @@ struct FavoriteList: View {
                         RecipeRow(name: favorite.name, duration: favorite.totalTime, ingredient: favorite.ingredientsShortList)
                             .background {
                                 BackgroundImage(height: Constant.rowHeight, data: favorite.image)
+                                    .accessibilityHidden(false)
+                                    .accessibilityLabel(Text("Recipe illustration"))
+                                    .accessibilityValue(Text(favorite.name))
                             }
                     }
                     .listRowInsets(EdgeInsets())

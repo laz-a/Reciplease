@@ -11,7 +11,7 @@ import SwiftUI
 struct TabbarAppearanceModifier: ViewModifier {
     init(backgroundColor: Color) {
         let bigFont = UIFont(name: Constant.font, size: 30)!
-        let offset = UIOffset(horizontal: 0, vertical: -4)
+        let offset = UIOffset(horizontal: 0, vertical: -12)
         
         let textAttributes: [NSAttributedString.Key : Any] = [NSAttributedString.Key.font: bigFont]
 

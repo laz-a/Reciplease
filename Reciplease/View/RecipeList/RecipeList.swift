@@ -33,6 +33,9 @@ struct RecipeList: View {
                             RecipeRow(name: recipe.name, duration: recipe.totalTime, ingredient: recipe.ingredientsShortList)
                                 .background {
                                     BackgroundImage(height: Constant.rowHeight, src: recipe.image)
+                                        .accessibilityHidden(false)
+                                        .accessibilityLabel(Text("Recipe illustration"))
+                                        .accessibilityValue(Text(recipe.name))
                                 }
                         }
                         .listRowInsets(EdgeInsets())

@@ -19,7 +19,11 @@ struct RecipeDetailCell: View {
                 Image(systemName: "clock")
                     .scaleEffect(0.8)
             }
+            .accessibilityHidden(true)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text("Time"))
+        .accessibilityValue(Text(duration.toAccessibleTime))
         .padding(4)
         .background(Color.reciDark)
         .foregroundColor(.white)

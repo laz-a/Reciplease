@@ -11,7 +11,7 @@ struct SearchView: View {
     @EnvironmentObject var recipeViewModel: RecipeViewModel
     
     @State private var isActive = false
-    @State private var searchText = "Chicken"
+    @State private var searchText = ""
     @State private var presentAlertError = false
     @State private var alertMessage = ""
     
@@ -29,6 +29,7 @@ struct SearchView: View {
                     HStack {
                         VStack {
                             TextField("Lemon, Cheese, Sausages...", text: $searchText)
+                                .accessibilityLabel(Text("Add ingredients field"))
                                 .onSubmit {
                                     addIngredients()
                                 }
@@ -60,6 +61,8 @@ struct SearchView: View {
                         ScrollView {
                             Text(recipeViewModel.ingredientsList)
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .accessibilityLabel(Text("Ingredients list"))
+                                .accessibilityValue(Text(recipeViewModel.ingredientsShortList))
                         }
                         
                         Spacer()
@@ -75,7 +78,7 @@ struct SearchView: View {
                             .padding()
                         }
                         
-                        NavigationLink(isActive: .constant(isActive)) {
+                        NavigationLink(isActive: .constant(recipeViewModel.loaded)) {
                             RecipeList()
                         } label: {
                             Button {

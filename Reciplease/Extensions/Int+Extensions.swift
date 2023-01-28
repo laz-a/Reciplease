@@ -16,4 +16,15 @@ extension BinaryInteger {
         
         return time.isEmpty ? "N/A" : time
     }
+    
+    // Int to time
+    var toAccessibleTime: String {
+        let int = Int(self)
+        let hour = int / 60 > 0 ? "\(int / 60) hours" : ""
+        let minute = int % 60 > 0 ? String(format: "%02d minutes", int % 60) : ""
+        
+        let time = "\(hour) \(minute)"
+        
+        return time.isEmpty ? "Undefined" : time
+    }
 }

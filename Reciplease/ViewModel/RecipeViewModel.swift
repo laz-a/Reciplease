@@ -22,6 +22,7 @@ class RecipeViewModel: ObservableObject {
     var ingredients: [String] = [] {
         didSet {
             ingredientsList = ingredients.map { "- \($0)\n" }.joined()
+            ingredientsShortList = ingredients.joined(separator: ", ")
         }
     }
     
@@ -32,6 +33,7 @@ class RecipeViewModel: ObservableObject {
     }
     
     @Published var ingredientsList: String = ""
+    @Published var ingredientsShortList: String = ""
     @Published var recipes: [Recipe] = []
     @Published var favorites: [Favorite] = []
     @Published var loaded: Bool = false
@@ -49,17 +51,15 @@ class RecipeViewModel: ObservableObject {
     }
     
     func addIngredients(_ ingredients: String) {
-        let add = ingredients
+        self.ingredients = ingredients
             .components(separatedBy: ",")
-            .reduce([String](), { partialResult, ing in
-                let ingredient: String = ing.trimmingCharacters(in: .whitespaces).capitalized
-                if !partialResult.contains(ingredient) && !self.ingredients.contains(ingredient) && !ingredient.isEmpty {
+            .reduce(self.ingredients, { partialResult, ing in
+                let ingredient = ing.trimmingCharacters(in: .whitespaces).capitalized
+                if !partialResult.contains(ingredient) && !ingredient.isEmpty {
                     return partialResult + [ingredient]
                 }
                 return partialResult
             })
-        
-        self.ingredients += add
     }
     
     func clearIngredients() {
