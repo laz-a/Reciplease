@@ -21,7 +21,7 @@ struct RecipeDetailCell: View {
             }
         }
         .padding(4)
-        .background(Color.darkBackground)
+        .background(Color.reciDark)
         .foregroundColor(.white)
         .cornerRadius(3)
         .overlay {
@@ -33,7 +33,7 @@ struct RecipeDetailCell: View {
 
 struct RecipeDetailCell_Previews: PreviewProvider {
     static var previews: some View {
-        RecipeDetailCell(duration: ModelData().recipes[0].totalTime)
+        RecipeDetailCell(duration: ModelData().edamam.recipes[0].totalTime)
             .previewLayout(.fixed(width: 50, height: 50))
     }
 }

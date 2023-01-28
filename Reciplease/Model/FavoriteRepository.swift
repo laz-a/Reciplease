@@ -19,13 +19,15 @@ final class FavoriteRepository {
     }
 
     // MARK: - Repository
+    
+    // Get all favorites
     func getFavorites(completion: ([Favorite]) -> Void) {
-        let request: NSFetchRequest<Favorite> = Favorite.fetchRequest()
-        request.sortDescriptors = [
+        let fetchRequest: NSFetchRequest<Favorite> = Favorite.fetchRequest()
+        fetchRequest.sortDescriptors = [
           NSSortDescriptor(keyPath: \Favorite.createdDate, ascending: false)
         ]
         do {
-            let recipes = try coreDataStack.viewContext.fetch(request)
+            let recipes = try coreDataStack.viewContext.fetch(fetchRequest)
             completion(recipes)
         } catch {
             print(error)
@@ -33,11 +35,27 @@ final class FavoriteRepository {
         }
     }
     
+    // Get favorite by id
+    func getFavorite(id: String, completion: (Favorite?) -> Void) {
+        let fetchRequest: NSFetchRequest<Favorite> = Favorite.fetchRequest()
+        fetchRequest.fetchLimit =  1
+        fetchRequest.predicate = NSPredicate(format: "id == %@" ,id)
+        
+        do {
+            let favorite = try coreDataStack.viewContext.fetch(fetchRequest)
+            completion(favorite[0])
+        } catch {
+            print(error)
+            completion(nil)
+        }
+    }
+    
+    // Check if favorite exist
     func favoriteExist(id: String) -> Bool {
         let fetchRequest: NSFetchRequest<Favorite> = Favorite.fetchRequest()
         fetchRequest.fetchLimit =  1
-        fetchRequest.predicate = NSPredicate(format: "id == %d" ,id)
-
+        fetchRequest.predicate = NSPredicate(format: "id == %@" ,id)
+        
         do {
             let count = try coreDataStack.viewContext.count(for: fetchRequest)
             return count > 0
@@ -47,18 +65,19 @@ final class FavoriteRepository {
         }
     }
     
-    func addFavorite(recipe recipeEdamam: Recipe, image: Data? = nil, completion: () -> Void) {
-        let recipe = Favorite(context: coreDataStack.viewContext)
-        recipe.id = recipeEdamam.id
-        recipe.name = recipeEdamam.name
-        recipe.url = recipeEdamam.url
-        recipe.source = recipeEdamam.source
-        recipe.image = image
-        recipe.totalTime = recipeEdamam.totalTime
+    // Add favorite
+    func addFavorite(recipe: Recipe, image: Data? = nil, completion: () -> Void) {
+        let favorite = Favorite(context: coreDataStack.viewContext)
+        favorite.id = recipe.id
+        favorite.name = recipe.name
+        favorite.url = recipe.url
+        favorite.source = recipe.source
+        favorite.image = image
+        favorite.totalTime = recipe.totalTime
         
         var order: Int16 = 1
         
-        recipe.ingredients = Set(recipeEdamam.ingredients.map {
+        favorite.ingredients = Set(recipe.ingredients.map {
             let ingredient = Ingredient(context: coreDataStack.viewContext)
             ingredient.id = $0.id
             ingredient.text = $0.text
@@ -75,20 +94,19 @@ final class FavoriteRepository {
             try coreDataStack.viewContext.save()
             completion()
         } catch {
-            print("We were unable to save \(recipe)")
+            print("We were unable to save \(favorite)")
         }
     }
     
+    // Remove favorite
     func deleteFavorite(_ favorite: Favorite, completion: () -> Void) {
-        getFavorites { favorites in
-            coreDataStack.viewContext.delete(favorite)
-            do {
-                try coreDataStack.viewContext.save()
-                completion()
-            } catch {
-                print(error)
-                completion()
-            }
+        coreDataStack.viewContext.delete(favorite)
+        do {
+            try coreDataStack.viewContext.save()
+            completion()
+        } catch {
+            print(error)
+            completion()
         }
     }
 }

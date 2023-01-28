@@ -8,27 +8,19 @@
 import SwiftUI
 
 struct FavoriteDetail: View {
-    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var recipeModel: RecipeViewModel
-    var favorite: Favorite
+    @Environment(\.dismiss) var dismiss
+    @State private var showingSheet = false
     
-    var gradient: LinearGradient {
-        .linearGradient(
-            Gradient(colors: [.black.opacity(0.5), .black.opacity(0)]),
-            startPoint: .bottom,
-            endPoint: .center)
-    }
+    var favorite: Favorite
     
     var body: some View {
         VStack {
             ScrollView {
                 VStack(alignment: .leading) {
                     ZStack {
-                        if let imageData = favorite.image {
-                            Image(uiImage: UIImage(data: imageData)!)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        }
+                        BackgroundImage(height: .infinity, data: favorite.image)
+                        Constant.gradient
                         VStack {
                             HStack {
                                 Spacer()
@@ -41,7 +33,6 @@ struct FavoriteDetail: View {
                             Text(favorite.name)
                                 .font(.title)
                         }
-                        gradient
                     }
                     VStack(alignment: .leading) {
                         Text("Ingredients")
@@ -52,23 +43,23 @@ struct FavoriteDetail: View {
                     }
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                 }
+                .padding(.top)
                 .navigationTitle(favorite.name)
                 .navigationBarTitleDisplayMode(.inline)
             }
             
-            NavigationLink {
-//                WebView(url: favorite.url)
-            } label: {
-                Text("Get directions")
-                    .padding([.top, .bottom], 10)
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(.white)
-                    .background(Color.greenButton)
-                    .cornerRadius(5)
+            HStack {
+                Button("Get directions") {
+                    showingSheet.toggle()
+                }
+                .buttonStyle(GreenFullButton())
+                .fullScreenCover(isPresented: $showingSheet) {
+                    RecipeDirections(title: favorite.name, url: favorite.url)
+                }
             }
             .padding()
         }
-        .background(Color.darkBackground)
+        .background(Color.reciDark)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -77,7 +68,7 @@ struct FavoriteDetail: View {
                 } label: {
                     Label("Toggle favorite", systemImage: "star.fill")
                         .labelStyle(.iconOnly)
-                        .foregroundColor(Color.greenButton)
+                        .foregroundColor(Color.reciGreen)
                 }
             }
         }

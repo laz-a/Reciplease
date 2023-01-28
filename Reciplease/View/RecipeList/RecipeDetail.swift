@@ -8,16 +8,12 @@
 import SwiftUI
 
 struct RecipeDetail: View {
-    @EnvironmentObject var recipeModel: RecipeViewModel
+    @EnvironmentObject var recipeViewModel: RecipeViewModel
+    
     @State var recipe: Recipe
     @State private var recipeImage: Image?
-    
-    var gradient: LinearGradient {
-        .linearGradient(
-            Gradient(colors: [.black.opacity(0.5), .black.opacity(0)]),
-            startPoint: .bottom,
-            endPoint: .center)
-    }
+    @State private var showingSheet = false
+    @State private var isFavorite: Bool = false
     
     var body: some View {
         VStack {
@@ -27,24 +23,27 @@ struct RecipeDetail: View {
                         AsyncImage(url: recipe.image) { phase in
                             switch phase {
                             case .empty:
-                                ProgressView()
-                                    .progressViewStyle(.circular)
+                                ZStack {
+                                    Image("default")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                    ProgressView()
+                                        .progressViewStyle(.circular)
+                                }
                             case .success(let image):
                                 image
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .onAppear {
-                                        print("onAppear :: recipeImage")
                                         recipeImage = image
                                     }
-                            case .failure:
-                                Text("Failed fetching image. Make sure to check your data connection and try again.")
-                                    .foregroundColor(.red)
-                            @unknown default:
-                                Text("Unknown error. Please try again.")
-                                    .foregroundColor(.red)
+                            default:
+                                Image("default")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
                             }
                         }
+                        Constant.gradient
                         VStack {
                             HStack {
                                 Spacer()
@@ -56,8 +55,7 @@ struct RecipeDetail: View {
                             Spacer()
                             Text(recipe.name)
                                 .font(.title)
-                        }
-                        gradient
+                        }.padding(.bottom)
                     }
                     VStack(alignment: .leading) {
                         Text("Ingredients")
@@ -68,38 +66,31 @@ struct RecipeDetail: View {
                     }
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                 }
+                .padding(.top)
                 .navigationTitle(recipe.name)
                 .navigationBarTitleDisplayMode(.inline)
             }
             
-            NavigationLink {
-                WebView(url: recipe.url)
-            } label: {
-                Text("Get directions")
-                    .padding([.top, .bottom], 10)
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(.white)
-                    .background(Color.greenButton)
-                    .cornerRadius(5)
+            HStack {
+                Button("Get directions") {
+                    showingSheet.toggle()
+                }
+                .buttonStyle(GreenFullButton())
+                .fullScreenCover(isPresented: $showingSheet) {
+                    RecipeDirections(title: recipe.name, url: recipe.url)
+                }
             }
             .padding()
         }
-        .background(Color.darkBackground)
+        .background(Color.reciDark)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    if !recipe.isFavorite {
-                        recipeModel.addFavorite(recipe, image: recipeImage?.imageData())
+                
+                HStack {
+                    FavoriteButton(isSet: $isFavorite, recipe: recipe, imageData: recipeImage?.imageData())
+                    .onAppear {
+                        isFavorite = recipeViewModel.isFavorite(recipeId: recipe.id)
                     }
-                } label: {
-                    Label("Toggle favorite", systemImage: recipe.isFavorite ? "star.fill" : "star")
-                        .labelStyle(.iconOnly)
-                        .foregroundColor(Color.greenButton)
-                }
-                .onAppear {
-                    print("~~~~~~~~~~isFavorite~~~~~~~~~~")
-                    print(recipe.isFavorite)
-                    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                 }
             }
         }
@@ -108,7 +99,7 @@ struct RecipeDetail: View {
 
 struct RecipeDetail_Previews: PreviewProvider {
     static var previews: some View {
-        RecipeDetail(recipe: ModelData().recipes[0])
+        RecipeDetail(recipe: ModelData().edamam.recipes[0])
             .environmentObject(RecipeViewModel())
     }
 }
@@ -124,7 +115,6 @@ extension View {
 
         let targetSize = controller.view.intrinsicContentSize
         view?.bounds = CGRect(origin: .zero, size: targetSize)
-        view?.backgroundColor = .yellow
 
         let renderer = UIGraphicsImageRenderer(size: targetSize)
 

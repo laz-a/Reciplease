@@ -24,25 +24,25 @@ struct ContentView: View {
                 }
                 .tabItem {
                     Text("Search")
-                        .font(Font.custom("Cera-Regular", size: 36))
                 }
                 .tag(Tab.search)
                 
                 NavigationView {
                     FavoriteList()
                         .onAppear {
-                            print("FavoriteList ~~~~~~ onAppear")
-                            recipeViewModel.getFavorites()
+                            recipeViewModel.getFavorites { success in
+                                print("success :: \(success)")
+                            }
                         }
                 }
                 .tabItem {
-                    Text("Favorite").font(.system(size: 36))
+                    Text("Favorite")
                 }
                 .tag(Tab.favorite)
             }
-            .tabbarAppearance(backgroundColor: .darkBackground)
+            .tabbarAppearance(backgroundColor: .reciDark)
         }
-        .navigationAppearance(backgroundColor: .darkBackground, foregroundColor: .white)
+        .navigationAppearance(backgroundColor: .reciDark, foregroundColor: .white)
         .tint(.white)
         .foregroundColor(.white)
     }

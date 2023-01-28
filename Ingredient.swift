@@ -27,6 +27,4 @@ public class Ingredient: NSManagedObject {
 
 }
 
-extension Ingredient : Identifiable {
-
-}
+extension Ingredient : Identifiable {}

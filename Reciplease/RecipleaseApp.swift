@@ -8,6 +8,7 @@
 import SwiftUI
 
 @main
+
 struct RecipleaseApp: App {
     @StateObject private var recipeViewModel = RecipeViewModel()
     

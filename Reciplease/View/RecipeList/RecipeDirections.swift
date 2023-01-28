@@ -8,15 +8,31 @@
 import SwiftUI
 
 struct RecipeDirections: View {
+    @Environment(\.dismiss) var dismiss
+    let title: String
     let url: URL
     
     var body: some View {
-        WebView(url: url)
+        NavigationView {
+            WebView(url: url)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationTitle(title)
+                .ignoresSafeArea()
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Label("Close", systemImage: "chevron.down")
+                        }
+                    }
+                }
+        }
     }
 }
 
 struct RecipeDirections_Previews: PreviewProvider {
     static var previews: some View {
-        RecipeDirections(url: ModelData().recipes[0].url)
+        RecipeDirections(title: ModelData().edamam.recipes[0].name, url: ModelData().edamam.recipes[0].url)
     }
 }

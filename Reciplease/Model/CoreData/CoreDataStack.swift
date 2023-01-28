@@ -11,21 +11,17 @@ import CoreData
 final class CoreDataStack {
     
     // MARK: - Properties
-    
     private let persistentContainerName = "Reciplease"
     
     // MARK: - Public
-    
     var viewContext: NSManagedObjectContext {
         return CoreDataStack.sharedInstance.persistentContainer.viewContext
     }
     
     //MARK: - Singleton
-    
     static let sharedInstance = CoreDataStack()
     
     // MARK: - Private
-    
     private init() {}
     
     private lazy var persistentContainer: NSPersistentContainer = {
@@ -35,7 +31,7 @@ final class CoreDataStack {
                 fatalError("Unresolved error \(error), \(error.userInfo) for: \(storeDescription.description)")
             }
         }
-        // anti doublon
+        // Prevent duplicate
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         return container
     }()

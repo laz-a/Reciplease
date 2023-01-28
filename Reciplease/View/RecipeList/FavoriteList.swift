@@ -15,8 +15,8 @@ struct FavoriteList: View {
             if recipeViewModel.favorites.isEmpty {
                 Text("No favorite")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.darkBackground)
-                    .foregroundColor(.grayButton)
+                    .background(Color.reciDark)
+                    .foregroundColor(.reciGray)
             } else {
                 List(recipeViewModel.favorites) { favorite in
                     ZStack {
@@ -30,19 +30,21 @@ struct FavoriteList: View {
                     .buttonStyle(PlainButtonStyle())
                         RecipeRow(name: favorite.name, duration: favorite.totalTime, ingredient: favorite.ingredientsShortList)
                             .background {
-                                BackgroundImage(data: favorite.image)
+                                BackgroundImage(height: Constant.rowHeight, data: favorite.image)
                             }
                     }
                     .listRowInsets(EdgeInsets())
                     .listRowSeparator(.hidden)
-                    .listRowBackground(Color.darkBackground)
+                    .listRowBackground(Color.reciDark)
                     .tag(favorite)
                 }
-                .background(Color.darkBackground)
+                .padding(.top)
+                .background(Color.reciDark)
                 .listStyle(.plain)
-                .background(Color.darkBackground)
             }
-        }.navigationTitle("Reciplease")
+        }
+        .navigationTitle("Favorite")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

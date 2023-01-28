@@ -7,8 +7,9 @@
 
 import SwiftUI
 
+// Custom colors
 extension Color {
-    static let darkBackground = Color(red: 54 / 255, green: 50 / 255, blue: 49 / 255, opacity: 1)
-    static let greenButton = Color(red: 67 / 255, green: 147 / 255, blue: 93 / 255, opacity: 1)
-    static let grayButton = Color(red: 138 / 255, green: 138 / 255, blue: 138 / 255, opacity: 1)
+    static let reciDark = Color(red: 4 / 255, green: 4 / 255, blue: 4 / 255, opacity: 1)
+    static let reciGreen = Color(red: 22 / 255, green: 136 / 255, blue: 69 / 255, opacity: 1)
+    static let reciGray = Color(red: 118 / 255, green: 118 / 255, blue: 118 / 255, opacity: 1)
 }

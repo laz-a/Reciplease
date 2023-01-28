@@ -7,11 +7,12 @@
 
 import SwiftUI
 
+// Navigation bar customization
 struct NavigationAppearanceModifier: ViewModifier {
     init(backgroundColor: Color, foregroundColor: Color, tintColor: Color?, hideSeparator: Bool) {
         let navBarAppearance = UINavigationBarAppearance()
-        navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor(foregroundColor)]
-        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor(foregroundColor)]
+        navBarAppearance.titleTextAttributes = [.font: UIFont(name: Constant.font, size: 42)!, .foregroundColor: UIColor(foregroundColor)]
+        navBarAppearance.largeTitleTextAttributes = [.font: UIFont(name: Constant.font, size: 42)!, .foregroundColor: UIColor(foregroundColor)]
         navBarAppearance.backgroundColor = UIColor(backgroundColor)
         
         if hideSeparator {
@@ -35,6 +36,5 @@ struct NavigationAppearanceModifier: ViewModifier {
 extension View {
     func navigationAppearance(backgroundColor: Color, foregroundColor: Color, tintColor: Color? = nil, hideSeparator: Bool = false) -> some View {
         self.modifier(NavigationAppearanceModifier(backgroundColor: backgroundColor, foregroundColor: foregroundColor, tintColor: tintColor, hideSeparator: hideSeparator))
-        
     }
 }

@@ -8,24 +8,24 @@
 import SwiftUI
 
 struct SearchView: View {
-@State private var isActive = false
-    @State private var searchText: String = "Chicken"
-    @State private var presentAlertError = false
-
     @EnvironmentObject var recipeViewModel: RecipeViewModel
-//    @ObservedObject private var recipeModel = RecipeViewModel()
-
+    
+    @State private var isActive = false
+    @State private var searchText = "Chicken"
+    @State private var presentAlertError = false
+    @State private var alertMessage = ""
+    
     private func addIngredients() {
         recipeViewModel.addIngredients(searchText)
         searchText = ""
     }
 
     var body: some View {
-//        NavigationView {
             VStack {
-                Spacer()
+                Spacer(minLength: 10)
                 VStack {
                     Text("What's in your fridge ?")
+                        .font(.title2)
                     HStack {
                         VStack {
                             TextField("Lemon, Cheese, Sausages...", text: $searchText)
@@ -42,12 +42,13 @@ struct SearchView: View {
                     }
                 }
                 .padding()
-                .foregroundColor(.darkBackground)
+                .foregroundColor(.reciDark)
                 .background(.white)
 
                 VStack(alignment: .leading, spacing: 20) {
                     HStack {
                         Text("Your ingredients :")
+                            .font(.title3)
                         Spacer()
                         Button("Clear") {
                             recipeViewModel.clearIngredients()
@@ -67,21 +68,28 @@ struct SearchView: View {
                             HStack(alignment: .center) {
                                 ProgressView()
                                     .frame(maxWidth: .infinity)
-                                    .foregroundColor(Color.darkBackground)
                                     .cornerRadius(10)
                                     .tint(.white)
                             }
-                            .scaleEffect(2)
+                            .scaleEffect(1.4)
                             .padding()
                         }
                         
-                        NavigationLink(isActive: .constant(recipeViewModel.loaded)) {
+                        NavigationLink(isActive: .constant(isActive)) {
                             RecipeList()
                         } label: {
                             Button {
                                 if !recipeViewModel.ingredients.isEmpty {
-                                    recipeViewModel.searchRecipes()
+                                    recipeViewModel.searchRecipes { success in
+                                        if success {
+                                            isActive = true
+                                        } else {
+                                            alertMessage = "API error"
+                                            presentAlertError = true
+                                        }
+                                    }
                                 } else {
+                                    alertMessage = "Add at least one ingredient"
                                     presentAlertError = true
                                 }
                             } label: {
@@ -90,19 +98,23 @@ struct SearchView: View {
                             .alert(isPresented: $presentAlertError) {
                                 Alert(
                                     title: Text("Ingredient error"),
-                                    message: Text("Add at least one ingredient"))
+                                    message: Text(alertMessage)
+                                )
                             }
                             .buttonStyle(GreenFullButton())
                             .disabled(recipeViewModel.state == .loading)
+                            .onAppear {
+                                print(isActive)
+                            }
                         }
                     }
                 }
                 .padding()
                 .navigationTitle("Reciplease")
+                .navigationBarTitleDisplayMode(.inline)
                 .foregroundColor(.white)
             }
-            .background(Color.darkBackground)
-//        }
+            .background(Color.reciDark)
     }
 }
 

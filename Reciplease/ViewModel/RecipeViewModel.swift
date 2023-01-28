@@ -7,8 +7,11 @@
 
 import Foundation
 import Combine
+import Alamofire
 
 class RecipeViewModel: ObservableObject {
+    private var recipeService: RecipeService
+    
     enum State {
         case idle
         case loading
@@ -41,6 +44,10 @@ class RecipeViewModel: ObservableObject {
     
     private let recipeRepository = FavoriteRepository()
     
+    init(session: Session = Session.default) {
+        recipeService = RecipeService(session: session)
+    }
+    
     func addIngredients(_ ingredients: String) {
         let add = ingredients
             .components(separatedBy: ",")
@@ -59,31 +66,42 @@ class RecipeViewModel: ObservableObject {
         ingredients = []
     }
     
-    func searchRecipes() {
-        state = .loading
-        RecipeService.shared.getRecipes(for: ingredients) { response in
-            switch response {
-            case .success(let edamam):
-                self.recipes = edamam.recipes
-                self.next = edamam.next
-                self.state = .loaded
-            case .failure(let error):
-                print(error)
-                self.state = .failed
+    func searchRecipes(completionHandler: @escaping(Bool) -> Void) {
+        if ingredients.isEmpty {
+            completionHandler(false)
+        } else {
+            state = .loading
+            recipeService.getRecipes(for: ingredients) { response in
+                switch response {
+                case .success(let edamam):
+                    self.recipes = edamam.recipes
+                    self.next = edamam.next
+                    self.state = .loaded
+                    completionHandler(true)
+                case .failure(let error):
+                    print(error)
+                    self.state = .failed
+                    completionHandler(false)
+                }
             }
         }
     }
     
-    func loadNextRecipes() {
-        guard let next = next else { return }
+    func loadNextRecipes(completionHandler: @escaping(Bool) -> Void) {
+        guard let next = next else {
+            completionHandler(false)
+            return
+        }
 //        state = .loading
-        RecipeService.shared.getRecipes(url: next) { response in
+        recipeService.getRecipes(url: next) { response in
             switch response {
             case .success(let edamam):
                 self.recipes += edamam.recipes
                 self.next = edamam.next
+                completionHandler(true)
 //                self.state = .loaded
             case .failure(let error):
+                completionHandler(false)
                 print(error)
 //                self.state = .failed
             }
@@ -94,17 +112,14 @@ class RecipeViewModel: ObservableObject {
         return recipeRepository.favoriteExist(id: recipeId)
     }
     
-    func getFavorites() {
+    func getFavorites(completionHandler: @escaping(Bool) -> Void) {
         recipeRepository.getFavorites { recipes in
             favorites = recipes
+            completionHandler(true)
         }
     }
     
     func addFavorite(_ recipe: Recipe, image: Data? = nil) {
-        if let index = recipes.firstIndex(where: { $0 == recipe }) {
-            recipes[index].isFavorite = true
-        }
-        
         recipeRepository.addFavorite(recipe: recipe, image: image) {
             print("addFavorite")
         }
@@ -113,6 +128,14 @@ class RecipeViewModel: ObservableObject {
     func removeFavorite(_ recipe: Favorite) {
         recipeRepository.deleteFavorite(recipe) {
             print("removeFavorite")
+        }
+    }
+    
+    func removeFavorite(_ recipe: Recipe) {
+        recipeRepository.getFavorite(id: recipe.id) { favorite in
+            if let favorite = favorite {
+                removeFavorite(favorite)
+            }
         }
     }
 }

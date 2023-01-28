@@ -6,6 +6,7 @@
 //
 
 extension BinaryInteger {
+    // Int to time
     var toTime: String {
         let int = Int(self)
         let hour = int / 60 > 0 ? "\(int / 60)h" : ""

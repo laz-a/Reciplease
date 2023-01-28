@@ -15,8 +15,8 @@ struct RecipeList: View {
             if recipeViewModel.recipes.isEmpty {
                 Text("No result")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.darkBackground)
-                    .foregroundColor(.grayButton)
+                    .background(Color.reciDark)
+                    .foregroundColor(.reciGray)
             } else {
                 List {
                     ForEach(recipeViewModel.recipes) { recipe in
@@ -24,36 +24,38 @@ struct RecipeList: View {
                             NavigationLink {
                                 RecipeDetail(recipe: recipe)
                             }
-                        label: {
-                            EmptyView()
-                        }
-                        .opacity(0.0)
-                        .buttonStyle(PlainButtonStyle())
+                            label: {
+                                EmptyView()
+                            }
+                            .opacity(0.0)
+                            .buttonStyle(PlainButtonStyle())
                             
                             RecipeRow(name: recipe.name, duration: recipe.totalTime, ingredient: recipe.ingredientsShortList)
                                 .background {
-                                    BackgroundImage(src: recipe.image)
+                                    BackgroundImage(height: Constant.rowHeight, src: recipe.image)
                                 }
                         }
                         .listRowInsets(EdgeInsets())
                         .listRowSeparator(.hidden)
-                        .listRowBackground(Color.darkBackground)
+                        .listRowBackground(Color.reciDark)
                         .tag(recipe)
                     }
                     
                     if recipeViewModel.hasNext {
                         ActivityIndicator(isAnimating: .constant(true))
                             .frame(maxWidth: .infinity)
-                            .listRowBackground(Color.darkBackground)
+                            .listRowBackground(Color.reciDark)
                             .onAppear {
-                                print("ActivityIndicator")
-                                recipeViewModel.loadNextRecipes()
+                                recipeViewModel.loadNextRecipes { success in
+                                    print("nextLoaded")
+                                }
                             }
                     }
                 }
+                .padding(.top)
                 .listStyle(.plain)
                 .environment(\.defaultMinListRowHeight, 10)
-                .background(Color.darkBackground)
+                .background(Color.reciDark)
             }
         }.navigationTitle("Reciplease")
     }

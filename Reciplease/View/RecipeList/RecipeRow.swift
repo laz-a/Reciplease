@@ -12,8 +12,6 @@ struct RecipeRow: View {
     var duration: Int16
     var ingredient: String
     
-    let rowHeight = 120.0
-    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -21,18 +19,20 @@ struct RecipeRow: View {
                 RecipeDetailCell(duration: duration)
                     .frame(width: 70)
             }
+            Spacer()
             Text(name)
             Text(ingredient)
+                .font(.subheadline)
                 .lineLimit(1)
         }
         .padding()
-        .frame(height: rowHeight)
+        .frame(height: Constant.rowHeight)
     }
 }
 
 struct RecipeRow_Previews: PreviewProvider {
     static var previews: some View {
-        let recipe = ModelData().recipes[0]
+        let recipe = ModelData().edamam.recipes[0]
         RecipeRow(name: recipe.name, duration: recipe.totalTime, ingredient: recipe.ingredientsShortList)
             .previewLayout(.fixed(width: 300, height: 70))
     }

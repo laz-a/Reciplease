@@ -13,7 +13,7 @@ struct GreenButton: ButtonStyle {
             .padding([.top, .bottom], 10)
             .frame(width: 60)
             .foregroundColor(.white)
-            .background(Color.greenButton)
+            .background(Color.reciGreen)
             .cornerRadius(5)
     }
 }
@@ -24,7 +24,7 @@ struct GrayButton: ButtonStyle {
             .padding([.top, .bottom], 10)
             .frame(width: 60)
             .foregroundColor(.white)
-            .background(Color.grayButton)
+            .background(Color.reciGray)
             .cornerRadius(5)
     }
 }
@@ -32,10 +32,11 @@ struct GrayButton: ButtonStyle {
 struct GreenFullButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            .font(.title3)
             .padding([.top, .bottom], 10)
             .frame(maxWidth: .infinity)
             .foregroundColor(.white)
-            .background(Color.greenButton)
+            .background(Color.reciGreen)
             .cornerRadius(5)
     }
 }

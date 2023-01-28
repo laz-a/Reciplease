@@ -7,6 +7,7 @@
 
 import Foundation
 
+// Decode data from edamam API
 struct Edamam: Decodable {
     let from: Int
     let to: Int
