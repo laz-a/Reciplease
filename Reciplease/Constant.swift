@@ -14,7 +14,7 @@ struct Constant {
 
     static var gradient: LinearGradient {
         .linearGradient(
-            Gradient(colors: [.black.opacity(0.9), .black.opacity(0.3)]),
+            Gradient(colors: [.black.opacity(0.9), .black.opacity(0.1)]),
             startPoint: .bottom,
             endPoint: .center
         )

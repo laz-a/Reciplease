@@ -106,9 +106,6 @@ struct SearchView: View {
                             }
                             .buttonStyle(GreenFullButton())
                             .disabled(recipeViewModel.state == .loading)
-                            .onAppear {
-                                print(isActive)
-                            }
                         }
                     }
                 }

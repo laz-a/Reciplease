@@ -14,19 +14,23 @@ struct RecipeDirections: View {
     
     var body: some View {
         NavigationView {
-            WebView(url: url)
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationTitle(title)
-                .ignoresSafeArea()
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button {
-                            dismiss()
-                        } label: {
-                            Label("Close", systemImage: "chevron.down")
+            VStack {
+                Spacer(minLength: 10)
+                WebView(url: url)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationTitle(title)
+                    .ignoresSafeArea()
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button {
+                                dismiss()
+                            } label: {
+                                Label("Close", systemImage: "chevron.down")
+                            }
                         }
                     }
-                }
+            }
+            .background(Color.reciDark)
         }
     }
 }

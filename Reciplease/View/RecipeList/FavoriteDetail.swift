@@ -40,9 +40,9 @@ struct FavoriteDetail: View {
                         }
                     }
                     VStack(alignment: .leading) {
-                        Text("Ingredients")
+                        Text("Ingredients:")
                             .font(.title2)
-                        
+                        Spacer(minLength: 12)
                         Text(favorite.ingredientsLongList)
                             .accessibilityLabel(Text("Ingredients"))
                             .accessibilityValue(favorite.ingredientsLongList)

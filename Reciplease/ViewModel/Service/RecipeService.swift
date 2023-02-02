@@ -12,7 +12,6 @@ final class RecipeService {
     
     private var session: Session
     static let shared = RecipeService()
-//    private init() {}
     
     init(session: Session = Session.default) {
         self.session = session

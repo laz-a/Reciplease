@@ -13,7 +13,7 @@ struct RecipeDetail: View {
     var recipe: Recipe
     @State private var recipeImage: Image?
     @State private var showingSheet = false
-    @State private var isFavorite: Bool = false
+    @State private var isFavorite = false
     
     var body: some View {
         VStack {
@@ -54,7 +54,6 @@ struct RecipeDetail: View {
                                     .frame(width: 60, height: 60)
                             }
                             .padding()
-                            
                             Spacer()
                             Text(recipe.name)
                                 .multilineTextAlignment(.center)
@@ -62,9 +61,9 @@ struct RecipeDetail: View {
                         }.padding(.bottom)
                     }
                     VStack(alignment: .leading) {
-                        Text("Ingredients")
+                        Text("Ingredients:")
                             .font(.title2)
-                        
+                        Spacer(minLength: 12)
                         Text(recipe.ingredientsLongList)
                             .accessibilityLabel(Text("Ingredients"))
                             .accessibilityValue(recipe.ingredientsLongList)
@@ -91,7 +90,6 @@ struct RecipeDetail: View {
         .background(Color.reciDark)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                
                 HStack {
                     FavoriteButton(isSet: $isFavorite, recipe: recipe, imageData: recipeImage?.imageData())
                     .onAppear {
@@ -128,9 +126,6 @@ extension View {
             view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
         }
         
-        
-        let imageData = uiImage.jpegData(compressionQuality: 0.8)
-        
-        return imageData
+        return uiImage.jpegData(compressionQuality: 0.8)
     }
 }
