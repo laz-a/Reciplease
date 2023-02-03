@@ -56,13 +56,8 @@ struct FavoriteDetail: View {
             }
             
             HStack {
-                Button("Get directions") {
-                    showingSheet.toggle()
-                }
+                Link("Get directions", destination: favorite.url)
                 .buttonStyle(GreenFullButton())
-                .fullScreenCover(isPresented: $showingSheet) {
-                    RecipeDirections(title: favorite.name, url: favorite.url)
-                }
             }
             .padding()
         }
@@ -81,9 +76,3 @@ struct FavoriteDetail: View {
         }
     }
 }
-
-//struct FavoriteDetail_Previews: PreviewProvider {
-//    static var previews: some View {
-//        FavoriteDetail(favorite: <#T##Favorite#>)
-//    }
-//}

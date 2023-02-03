@@ -51,6 +51,7 @@
 		6FBB9C10294AB775009F415A /* RecipeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBB9C0F294AB775009F415A /* RecipeRow.swift */; };
 		6FBB9C13294B5343009F415A /* RecipeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBB9C12294B5343009F415A /* RecipeService.swift */; };
 		6FBB9C15294B5CF3009F415A /* Edamam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBB9C14294B5CF2009F415A /* Edamam.swift */; };
+		6FF86290298D4A82002AA7A3 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF8628F298D4A82002AA7A3 /* View+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +108,7 @@
 		6FBB9C0F294AB775009F415A /* RecipeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeRow.swift; sourceTree = "<group>"; };
 		6FBB9C12294B5343009F415A /* RecipeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeService.swift; sourceTree = "<group>"; };
 		6FBB9C14294B5CF2009F415A /* Edamam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Edamam.swift; sourceTree = "<group>"; };
+		6FF8628F298D4A82002AA7A3 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +135,7 @@
 			children = (
 				6F25FBED2951FB1400599999 /* Color+Extensions.swift */,
 				6F1EE43729703A3600CA5ABD /* Int+Extensions.swift */,
+				6FF8628F298D4A82002AA7A3 /* View+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -428,6 +431,7 @@
 				6F446DE0294FB176007FEB76 /* RecipeDetail.swift in Sources */,
 				6F25FBFB29566E0900599999 /* RecipeDirections.swift in Sources */,
 				6F6472FD294A747800A88D58 /* ContentView.swift in Sources */,
+				6FF86290298D4A82002AA7A3 /* View+Extensions.swift in Sources */,
 				6F25FC1D2967717200599999 /* FavoriteDetail.swift in Sources */,
 				6F25FC2029677D5200599999 /* Favorite.swift in Sources */,
 				6F64732C294A783500A88D58 /* SearchView.swift in Sources */,

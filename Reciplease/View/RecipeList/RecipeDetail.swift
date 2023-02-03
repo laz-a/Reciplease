@@ -77,13 +77,8 @@ struct RecipeDetail: View {
             }
             
             HStack {
-                Button("Get directions") {
-                    showingSheet.toggle()
-                }
+                Link("Get directions", destination: recipe.url)
                 .buttonStyle(GreenFullButton())
-                .fullScreenCover(isPresented: $showingSheet) {
-                    RecipeDirections(title: recipe.name, url: recipe.url)
-                }
             }
             .padding()
         }
@@ -105,27 +100,5 @@ struct RecipeDetail_Previews: PreviewProvider {
     static var previews: some View {
         RecipeDetail(recipe: ModelData().edamam.recipes[0])
             .environmentObject(RecipeViewModel())
-    }
-}
-
-
-
-
-
-extension View {
-    func imageData() -> Data? {
-        let controller = UIHostingController(rootView: self.ignoresSafeArea())
-        let view = controller.view
-
-        let targetSize = controller.view.intrinsicContentSize
-        view?.bounds = CGRect(origin: .zero, size: targetSize)
-
-        let renderer = UIGraphicsImageRenderer(size: targetSize)
-
-        let uiImage = renderer.image { _ in
-            view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
-        }
-        
-        return uiImage.jpegData(compressionQuality: 0.8)
     }
 }
