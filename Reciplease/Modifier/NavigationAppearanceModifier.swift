@@ -11,8 +11,16 @@ import SwiftUI
 struct NavigationAppearanceModifier: ViewModifier {
     init(backgroundColor: Color, foregroundColor: Color, tintColor: Color?, hideSeparator: Bool) {
         let navBarAppearance = UINavigationBarAppearance()
-        navBarAppearance.titleTextAttributes = [.font: UIFont(name: Constant.font, size: 42)!, .foregroundColor: UIColor(foregroundColor)]
-        navBarAppearance.largeTitleTextAttributes = [.font: UIFont(name: Constant.font, size: 42)!, .foregroundColor: UIColor(foregroundColor)]
+        navBarAppearance.titleTextAttributes = [
+            .font: UIFont(name: Constant.font, size: 42)!,
+            .foregroundColor: UIColor(foregroundColor)
+        ]
+        
+        navBarAppearance.largeTitleTextAttributes = [
+            .font: UIFont(name: Constant.font, size: 42)!,
+            .foregroundColor: UIColor(foregroundColor)
+        ]
+        
         navBarAppearance.backgroundColor = UIColor(backgroundColor)
         
         if hideSeparator {

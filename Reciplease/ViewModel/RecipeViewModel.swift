@@ -92,18 +92,15 @@ class RecipeViewModel: ObservableObject {
             completionHandler(false)
             return
         }
-//        state = .loading
+
         recipeService.getRecipes(url: next) { response in
             switch response {
             case .success(let edamam):
                 self.recipes += edamam.recipes
                 self.next = edamam.next
                 completionHandler(true)
-//                self.state = .loaded
-            case .failure(let error):
+            case .failure:
                 completionHandler(false)
-                print(error)
-//                self.state = .failed
             }
         }
     }
@@ -114,7 +111,7 @@ class RecipeViewModel: ObservableObject {
     
     func getFavorites(completionHandler: @escaping(Bool) -> Void) {
         recipeRepository.getFavorites { recipes in
-            favorites = recipes
+            self.favorites = recipes
             completionHandler(true)
         }
     }
@@ -134,7 +131,7 @@ class RecipeViewModel: ObservableObject {
     func removeFavorite(_ recipe: Recipe) {
         recipeRepository.getFavorite(id: recipe.id) { favorite in
             if let favorite = favorite {
-                removeFavorite(favorite)
+                self.removeFavorite(favorite)
             }
         }
     }

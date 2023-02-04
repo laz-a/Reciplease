@@ -9,6 +9,7 @@ import SwiftUI
 
 struct FavoriteDetail: View {
     @EnvironmentObject var recipeModel: RecipeViewModel
+    @Environment(\.openURL) var openURL
     @Environment(\.dismiss) var dismiss
     
     @State private var showingSheet = false
@@ -56,7 +57,9 @@ struct FavoriteDetail: View {
             }
             
             HStack {
-                Link("Get directions", destination: favorite.url)
+                Button("Get directions") {
+                    openURL(favorite.url)
+                }
                 .buttonStyle(GreenFullButton())
             }
             .padding()

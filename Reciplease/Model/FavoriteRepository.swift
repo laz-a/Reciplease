@@ -21,32 +21,36 @@ final class FavoriteRepository {
     // MARK: - Repository
     
     // Get all favorites
-    func getFavorites(completion: ([Favorite]) -> Void) {
-        let fetchRequest: NSFetchRequest<Favorite> = Favorite.fetchRequest()
-        fetchRequest.sortDescriptors = [
-          NSSortDescriptor(keyPath: \Favorite.createdDate, ascending: false)
-        ]
-        do {
-            let recipes = try coreDataStack.viewContext.fetch(fetchRequest)
-            completion(recipes)
-        } catch {
-            print(error)
-            completion([])
+    func getFavorites(completion: @escaping([Favorite]) -> Void) {
+        DispatchQueue.main.async {
+            let fetchRequest: NSFetchRequest<Favorite> = Favorite.fetchRequest()
+            fetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \Favorite.createdDate, ascending: false)
+            ]
+            do {
+                let recipes = try self.coreDataStack.viewContext.fetch(fetchRequest)
+                completion(recipes)
+            } catch {
+                print(error)
+                completion([])
+            }
         }
     }
     
     // Get favorite by id
-    func getFavorite(id: String, completion: (Favorite?) -> Void) {
-        let fetchRequest: NSFetchRequest<Favorite> = Favorite.fetchRequest()
-        fetchRequest.fetchLimit =  1
-        fetchRequest.predicate = NSPredicate(format: "id == %@" ,id)
-        
-        do {
-            let favorite = try coreDataStack.viewContext.fetch(fetchRequest)
-            completion(favorite[0])
-        } catch {
-            print(error)
-            completion(nil)
+    func getFavorite(id: String, completion: @escaping(Favorite?) -> Void) {
+        DispatchQueue.main.async {
+            let fetchRequest: NSFetchRequest<Favorite> = Favorite.fetchRequest()
+            fetchRequest.fetchLimit =  1
+            fetchRequest.predicate = NSPredicate(format: "id == %@" ,id)
+            
+            do {
+                let favorite = try self.coreDataStack.viewContext.fetch(fetchRequest)
+                completion(favorite[0])
+            } catch {
+                print(error)
+                completion(nil)
+            }
         }
     }
     
@@ -66,47 +70,51 @@ final class FavoriteRepository {
     }
     
     // Add favorite
-    func addFavorite(recipe: Recipe, image: Data? = nil, completion: () -> Void) {
-        let favorite = Favorite(context: coreDataStack.viewContext)
-        favorite.id = recipe.id
-        favorite.name = recipe.name
-        favorite.url = recipe.url
-        favorite.source = recipe.source
-        favorite.image = image
-        favorite.totalTime = recipe.totalTime
-        
-        var order: Int16 = 1
-        
-        favorite.ingredients = Set(recipe.ingredients.map {
-            let ingredient = Ingredient(context: coreDataStack.viewContext)
-            ingredient.id = $0.id
-            ingredient.text = $0.text
-            ingredient.food = $0.food
-            ingredient.foodCategory = $0.foodCategory
-            ingredient.quantity = $0.quantity
-            ingredient.measure = $0.measure
-            ingredient.order = order
-            order += 1
-            return ingredient
-        })
-        
-        do {
-            try coreDataStack.viewContext.save()
-            completion()
-        } catch {
-            print("We were unable to save \(favorite)")
+    func addFavorite(recipe: Recipe, image: Data? = nil, completion: @escaping() -> Void) {
+        DispatchQueue.main.async {
+            let favorite = Favorite(context: self.coreDataStack.viewContext)
+            favorite.id = recipe.id
+            favorite.name = recipe.name
+            favorite.url = recipe.url
+            favorite.source = recipe.source
+            favorite.image = image
+            favorite.totalTime = recipe.totalTime
+            
+            var order: Int16 = 1
+            
+            favorite.ingredients = Set(recipe.ingredients.map {
+                let ingredient = Ingredient(context: self.coreDataStack.viewContext)
+                ingredient.id = $0.id
+                ingredient.text = $0.text
+                ingredient.food = $0.food
+                ingredient.foodCategory = $0.foodCategory
+                ingredient.quantity = $0.quantity
+                ingredient.measure = $0.measure
+                ingredient.order = order
+                order += 1
+                return ingredient
+            })
+            
+            do {
+                try self.coreDataStack.viewContext.save()
+                completion()
+            } catch {
+                print("We were unable to save \(favorite)")
+            }
         }
     }
     
     // Remove favorite
-    func deleteFavorite(_ favorite: Favorite, completion: () -> Void) {
-        coreDataStack.viewContext.delete(favorite)
-        do {
-            try coreDataStack.viewContext.save()
-            completion()
-        } catch {
-            print(error)
-            completion()
+    func deleteFavorite(_ favorite: Favorite, completion: @escaping() -> Void) {
+        DispatchQueue.main.async {
+            self.coreDataStack.viewContext.delete(favorite)
+            do {
+                try self.coreDataStack.viewContext.save()
+                completion()
+            } catch {
+                print(error)
+                completion()
+            }
         }
     }
 }
