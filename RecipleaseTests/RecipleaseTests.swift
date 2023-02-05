@@ -31,7 +31,6 @@ final class RecipleaseTests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
-        
         viewModel = nil
     }
 
@@ -203,10 +202,28 @@ final class RecipleaseTests: XCTestCase {
     }
     
     func testGetFavortiesShouldSuccess() {
-        viewModel.getFavorites { success in
-            XCTAssertTrue(success)
-            XCTAssertTrue(self.viewModel.favorites.count > 0)
+        // given
+        viewModel.addIngredients("Chicken")
+        
+        MockURLProtocol.responseWithValidData()
+        let expectation = XCTestExpectation(description: "Wait for queue change.")
+        
+        viewModel.searchRecipes { success in
+            // when
+            let recipe = self.viewModel.recipes[0]
+            self.viewModel.addFavorite(recipe)
+            
+            // then
+            
+            self.viewModel.getFavorites { success in
+                XCTAssertTrue(success)
+                XCTAssertTrue(self.viewModel.favorites.count > 0)
+            }
+            
+            expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 0.1)
     }
     
     func testIsFavoriteShouldFailIfRecipeIsNotInFavorite() {

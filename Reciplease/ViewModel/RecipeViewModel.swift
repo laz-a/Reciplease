@@ -44,7 +44,7 @@ class RecipeViewModel: ObservableObject {
         }
     }
     
-    private let recipeRepository = FavoriteRepository()
+    private let favoriteRepository = FavoriteRepository()
     
     init(session: Session = Session.default) {
         recipeService = RecipeService(session: session)
@@ -106,30 +106,30 @@ class RecipeViewModel: ObservableObject {
     }
     
     func isFavorite(recipeId: String) -> Bool {
-        return recipeRepository.favoriteExist(id: recipeId)
+        return favoriteRepository.favoriteExist(id: recipeId)
     }
     
     func getFavorites(completionHandler: @escaping(Bool) -> Void) {
-        recipeRepository.getFavorites { recipes in
+        favoriteRepository.getFavorites { recipes in
             self.favorites = recipes
             completionHandler(true)
         }
     }
     
     func addFavorite(_ recipe: Recipe, image: Data? = nil) {
-        recipeRepository.addFavorite(recipe: recipe, image: image) {
+        favoriteRepository.addFavorite(recipe: recipe, image: image) {
             print("addFavorite")
         }
     }
     
     func removeFavorite(_ recipe: Favorite) {
-        recipeRepository.deleteFavorite(recipe) {
+        favoriteRepository.deleteFavorite(recipe) {
             print("removeFavorite")
         }
     }
     
     func removeFavorite(_ recipe: Recipe) {
-        recipeRepository.getFavorite(id: recipe.id) { favorite in
+        favoriteRepository.getFavorite(id: recipe.id) { favorite in
             if let favorite = favorite {
                 self.removeFavorite(favorite)
             }
