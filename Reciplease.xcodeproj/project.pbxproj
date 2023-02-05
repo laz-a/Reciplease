@@ -80,7 +80,7 @@
 		6F25FC1A2965BB2E00599999 /* BackgroundImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundImage.swift; sourceTree = "<group>"; };
 		6F25FC1C2967717200599999 /* FavoriteDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteDetail.swift; sourceTree = "<group>"; };
 		6F25FC1E29677D5200599999 /* Favorite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Favorite.swift; path = Reciplease/Model/Favorite.swift; sourceTree = SOURCE_ROOT; };
-		6F25FC2329677FD600599999 /* Ingredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = SOURCE_ROOT; };
+		6F25FC2329677FD600599999 /* Ingredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Ingredient.swift; path = Reciplease/Model/Ingredient.swift; sourceTree = SOURCE_ROOT; };
 		6F2BABFF294BE25B00C8FCDC /* RecipeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeViewModel.swift; sourceTree = "<group>"; };
 		6F2BAC04294DF83800C8FCDC /* recipeData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = recipeData.json; sourceTree = "<group>"; };
 		6F40F6F0296B0B58005CF67A /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
